@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Tienes una Invitación Especial!</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Font Inter / Dancing Script -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fef2f2 0%, #ffe4e6 50%, #fecdd3 100%);
+        }
+        .font-cursive {
+            font-family: 'Caveat', cursive;
+        }
+        /* Transiciones suaves para animación de botones y movimientos */
+        .btn-transition {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        /* Decoración de pulso continuo para el botón de Maps */
+        @keyframes subtle-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-pulse-subtle {
+            animation: subtle-pulse 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-6 overflow-x-hidden relative">
+
+    <!-- Card Principal de Invitación -->
+    <div id="invitation-card" class="bg-white/90 backdrop-blur-md max-w-lg w-full rounded-3xl shadow-2xl p-6 sm:p-8 border border-rose-100 text-center relative overflow-hidden transition-all duration-500 transform">
+        
+        <!-- Elementos decorativos de fondo -->
+        <div class="absolute -top-12 -left-12 w-32 h-32 bg-rose-200 rounded-full blur-2xl opacity-50 pointer-events-none"></div>
+        <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-pink-200 rounded-full blur-2xl opacity-50 pointer-events-none"></div>
+
+        <!-- Encabezado con Icono de Flor -->
+        <div class="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-100 text-rose-500 shadow-inner">
+            <i class="fa-solid fa-seedling text-3xl"></i>
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 tracking-tight mb-2">
+            ¡Estás Invitado/a! 🌸
+        </h1>
+        <p class="text-rose-500 font-cursive text-2xl sm:text-3xl mb-6"> Un hermoso momento juntos 🌺 </p>
+
+        <!-- Bloque de Detalle de la Fecha y Hora -->
+        <div class="bg-gradient-to-r from-rose-50 to-pink-50 rounded-2xl p-4 sm:p-5 mb-6 border border-rose-100 shadow-sm flex items-center justify-around">
+            <div class="flex items-center gap-3">
+                <div class="p-3 bg-white rounded-xl text-rose-500 shadow-sm">
+                    <i class="fa-regular fa-calendar-days text-2xl sm:text-3xl"></i>
+                </div>
+                <div class="text-left">
+                    <span class="block text-xs uppercase font-semibold tracking-wider text-rose-400">Fecha</span>
+                    <span class="text-lg sm:text-xl font-bold text-gray-800">Día 7</span>
+                </div>
+            </div>
+            <div class="h-10 w-px bg-rose-200"></div>
+            <div class="flex items-center gap-3">
+                <div class="p-3 bg-white rounded-xl text-rose-500 shadow-sm">
+                    <i class="fa-regular fa-clock text-2xl sm:text-3xl"></i>
+                </div>
+                <div class="text-left">
+                    <span class="block text-xs uppercase font-semibold tracking-wider text-rose-400">Hora</span>
+                    <span class="text-lg sm:text-xl font-bold text-gray-800">2:00 PM</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón de Ubicación en Google Maps -->
+        <div class="mb-8">
+            <a href="https://maps.app.goo.gl/nwgX8cx36xNpAzyC7" target="_blank" rel="noopener noreferrer" 
+               class="animate-pulse-subtle inline-flex items-center justify-center gap-3 w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold shadow-lg shadow-teal-500/30 transition-all hover:scale-[1.02] active:scale-95">
+                <i class="fa-solid fa-location-dot text-xl text-emerald-200"></i>
+                <span>Ver Ubicación en Google Maps</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-75"></i>
+            </a>
+        </div>
+
+        <hr class="border-rose-100 mb-6">
+
+        <!-- Pregunta Interactiva -->
+        <div id="interactive-section" class="space-y-4 min-h-[160px] flex flex-col justify-center relative">
+            <p id="question-text" class="text-lg sm:text-xl font-semibold text-gray-700">
+                ¿Aceptas la invitación? 🌼
+            </p>
+
+            <!-- Contenedor de Botones -->
+            <div class="flex flex-wrap items-center justify-center gap-4 py-2 min-h-[100px] relative" id="button-container">
+                <!-- Botón Sí -->
+                <button id="btn-yes" onclick="handleYesClick()" 
+                        class="btn-transition bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-8 rounded-full shadow-lg shadow-rose-500/30 focus:outline-none flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span id="yes-text">¡Sí, me encantaría! 🌻</span>
+                </button>
+
+                <!-- Botón No -->
+                <button id="btn-no" onclick="handleNoClick()" 
+                        class="btn-transition bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 px-6 rounded-full shadow focus:outline-none">
+                    <span id="no-text">No puedo 🥀</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE CELEBRACIÓN (Oculta al inicio) -->
+    <div id="success-card" class="hidden bg-white/95 backdrop-blur-md max-w-lg w-full rounded-3xl shadow-2xl p-8 border border-rose-100 text-center transform scale-90 transition-all duration-500">
+        <div class="mb-4 inline-flex items-center justify-center w-20 h-20 rounded-full bg-rose-100 text-rose-500 shadow-inner animate-bounce">
+            <i class="fa-solid fa-fan text-4xl"></i>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">¡Sabía que dirías que sí! 🌺✨</h2>
+        <p class="text-rose-500 font-cursive text-3xl mb-6">¡Nos espera un día floreciente!</p>
+        
+        <div class="bg-rose-50 rounded-2xl p-4 mb-6 border border-rose-100 text-gray-700 space-y-2 text-sm sm:text-base">
+            <p><strong>🗓️ Día:</strong> El 7 del mes</p>
+            <p><strong>⏰ Hora:</strong> 2:00 PM exactas</p>
+            <p class="text-xs text-rose-400">¡Nos vemos muy pronto! 🌷</p>
+        </div>
+
+        <a href="https://maps.app.goo.gl/nwgX8cx36xNpAzyC7" target="_blank" rel="noopener noreferrer" 
+           class="inline-flex items-center justify-center gap-2 py-3 px-6 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-semibold shadow-md transition-all hover:scale-105">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <span>Ir a la ubicación</span>
+        </a>
+    </div>
+
+    <script>
+        // Estado del número de clics en "No"
+        let noCount = 0;
+        const maxNoClicks = 5;
+
+        // Frases para el botón "No" por nivel de clic
+        const noMessages = [
+            "No puedo 🥀",
+            "¿Seguro/a? 🥺",
+            "¡Piénsalo bien! 🌸",
+            "¡No marchites mi ilusión! 😭",
+            "Última oportunidad... 🌹",
+            "¡Te atraparé igual! 🌺"
+        ];
+
+        // Frases para hacer crecer el entusiasmado botón "Sí"
+        const yesMessages = [
+            "¡Sí, me encantaría! 🌻",
+            "¡Sí! 🌸",
+            "¡SÍ, CLARO QUE SÍ! 🌷",
+            "¡ACEPTO LA FLOR! 💖",
+            "¡SÍ A TODO! 🌺",
+            "¡HAZ CLIC AQUÍ! 💐"
+        ];
+
+        function handleNoClick() {
+            if (noCount < maxNoClicks) {
+                noCount++;
+
+                const btnYes = document.getElementById('btn-yes');
+                const btnNo = document.getElementById('btn-no');
+                const noText = document.getElementById('no-text');
+                const yesText = document.getElementById('yes-text');
+
+                // 1. Mover el botón "No" a una posición aleatoria con animación suave
+                const randomX = (Math.random() - 0.5) * 220; // Rango de movimiento X (-110px a 110px)
+                const randomY = (Math.random() - 0.5) * 160; // Rango de movimiento Y (-80px a 80px)
+
+                // 2. Reducir tamaño del botón No
+                const noScale = 1 - (noCount * 0.15); // Disminuye escala
+                const noPaddingY = Math.max(12 - (noCount * 2), 4);
+                const noPaddingX = Math.max(24 - (noCount * 4), 8);
+                const noFontSize = Math.max(16 - (noCount * 2), 10);
+
+                // Aplicar transformaciones combinadas (Escala + Movimiento)
+                btnNo.style.transform = `translate(${randomX}px, ${randomY}px) scale(${noScale})`;
+                btnNo.style.padding = `${noPaddingY}px ${noPaddingX}px`;
+                btnNo.style.fontSize = `${noFontSize}px`;
+                
+                // Cambiar texto de "No"
+                noText.innerText = noMessages[noCount] || noMessages[noMessages.length - 1];
+
+                // 3. Aumentar tamaño del botón Sí
+                const yesScale = 1 + (noCount * 0.25); // Crece la escala
+                const yesPaddingY = 12 + (noCount * 4);
+                const yesPaddingX = 32 + (noCount * 8);
+                const yesFontSize = 16 + (noCount * 3);
+
+                btnYes.style.transform = `scale(${yesScale})`;
+                btnYes.style.padding = `${yesPaddingY}px ${yesPaddingX}px`;
+                btnYes.style.fontSize = `${yesFontSize}px`;
+                
+                // Cambiar texto del botón Sí
+                yesText.innerText = yesMessages[noCount] || yesMessages[yesMessages.length - 1];
+
+                // Si se alcanza el límite de 5 clics
+                if (noCount === maxNoClicks) {
+                    btnNo.classList.add('opacity-30', 'pointer-events-none');
+                }
+            }
+        }
+
+        function handleYesClick() {
+            // Animación de Confeti temático de flores/primavera
+            launchConfetti();
+
+            // Ocultar Invitación y Mostrar Celebración
+            const card = document.getElementById('invitation-card');
+            const successCard = document.getElementById('success-card');
+
+            card.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                card.classList.add('hidden');
+                successCard.classList.remove('hidden');
+                setTimeout(() => {
+                    successCard.classList.remove('scale-90');
+                    successCard.classList.add('scale-100');
+                }, 50);
+            }, 400);
+        }
+
+        // Función para lanzar confeti en pantalla
+        function launchConfetti() {
+            const count = 200;
+            const defaults = {
+                origin: { y: 0.7 }
+            };
+
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+
+            fire(0.25, {
+                spread: 26,
+                startVelocity: 55,
+                colors: ['#fb7185', '#f43f5e', '#f472b6']
+            });
+            fire(0.2, {
+                spread: 60,
+                colors: ['#ffffff', '#fef08a', '#a7f3d0']
+            });
+            fire(0.35, {
+                spread: 100,
+                decay: 0.91,
+                scalar: 0.8
+            });
+            fire(0.1, {
+                spread: 120,
+                startVelocity: 25,
+                decay: 0.92,
+                colors: ['#ffe4e6', '#fb7185']
+            });
+            fire(0.1, {
+                spread: 120,
+                startVelocity: 45,
+            });
+        }
+    </script>
+</body>
+</html>
